@@ -1,9 +1,9 @@
-name: Deploy spring code to aws elastic beanstalk
+name: Deploy spring app to AWS Elastic Beanstalk
 
 on:
   push:
     branches:
-      - master
+      - '*'
 
 jobs:
   build:
@@ -28,6 +28,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/dev'
     name: deploy
     runs-on: ubuntu-latest
     steps:
