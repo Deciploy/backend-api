@@ -1,21 +1,18 @@
 package com.deciploy.backend.modules.api.common;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 public class ApiResponse<T> {
     private int status;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL) // Include only if not null
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String message;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
-
-    // Constructors, getters, and setters
-
-    // Constructors, getters, and setters
 
     @JsonProperty("status")
     public int getStatus() {
