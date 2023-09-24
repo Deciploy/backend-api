@@ -2,6 +2,8 @@ package com.deciploy.backend.modules.api.auth;
 
 import com.deciploy.backend.modules.api.auth.dto.LoginRequest;
 import com.deciploy.backend.modules.api.auth.dto.RegisterRequest;
+import com.deciploy.backend.modules.api.auth.dto.RegisterResponse;
+import com.deciploy.backend.modules.api.common.ApiResponseEntity;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +19,15 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);
-        return ResponseEntity.ok("User registered successfully");
+        return ApiResponseEntity.success("User registered successfully");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(authService.login(loginRequest));
+    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
+        String token = authService.login(loginRequest);
+        return ApiResponseEntity.data(new RegisterResponse(token));
     }
 
 }
