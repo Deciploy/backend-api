@@ -2,11 +2,10 @@ package com.deciploy.backend.modules.api.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ApiResponse<T> {
-    private int status;
+    private boolean status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String message;
@@ -15,12 +14,12 @@ public class ApiResponse<T> {
     private T data;
 
     @JsonProperty("status")
-    public int getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public boolean setStatus(boolean status) {
+        return this.status = status;
     }
 
     @JsonProperty("message")
@@ -43,14 +42,14 @@ public class ApiResponse<T> {
 
     public static <T> ResponseEntity<ApiResponse<T>> success(String message) {
         ApiResponse<T> response = new ApiResponse<>();
-        response.setStatus(HttpStatus.OK.value());
+        response.setStatus(true);
         response.setMessage(message);
         return ResponseEntity.ok(response);
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> data(T data) {
         ApiResponse<T> response = new ApiResponse<>();
-        response.setStatus(HttpStatus.OK.value());
+        response.setStatus(true);
         response.setData(data);
         return ResponseEntity.ok(response);
     }
