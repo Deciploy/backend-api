@@ -8,5 +8,3 @@
 
 ## Help
 
-- [Nx - MonoRepo](https://nx.dev/getting-started/intro)
-- [Tailwind ](https://tailwindcss.com/docs/installation)
