@@ -1,5 +1,7 @@
 package com.deciploy.backend.modules.api.company.entity;
 
+import com.deciploy.backend.modules.api.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,4 +23,8 @@ public class Company {
     private String contactNumber;
 
     private String contactPerson;
+
+    @JsonIgnore
+    @ManyToOne
+    private User createdBy;
 }
