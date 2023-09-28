@@ -11,12 +11,12 @@ public record CompanyRegisterRequest(
         @NotBlank()
         @Email()
         String email,
-        
+
         @NotBlank()
         String address,
 
         @NotBlank()
-        @Pattern(regexp = "^[0-9]{10}$")
+        @Pattern(regexp = "^[0-9]{10}$", message = "invalid format")
         String contactNumber,
 
         @NotBlank()
