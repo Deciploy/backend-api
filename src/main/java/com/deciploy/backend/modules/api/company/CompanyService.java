@@ -30,7 +30,7 @@ public class CompanyService {
         try {
             companyRepository.save(company);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This registration is already exist");
         }
     }
 
