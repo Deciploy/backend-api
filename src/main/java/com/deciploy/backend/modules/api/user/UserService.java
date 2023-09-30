@@ -82,6 +82,6 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userRepository.findUsersByCompany(authService.getAuthenticatedUser().getCompany());
     }
 }
