@@ -1,5 +1,7 @@
 package com.deciploy.backend.modules.api.user.entity;
 
+import com.deciploy.backend.modules.api.company.entity.Company;
+import com.deciploy.backend.modules.api.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,15 +28,23 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
+    @ManyToOne
+    private Company company;
+
+    @ManyToOne
+    private Team team;
+
     public User() {
 
     }
 
-    public User(String fullName, String email, String password, String[] roles) {
+    public User(String fullName, String email, String password, String[] roles, Company company, Team team) {
         this.email = email;
         this.fullName = fullName;
         this.password = password;
         this.roles = Arrays.stream(roles).toList();
+        this.company = company;
+        this.team = team;
     }
 
     @Override
@@ -99,5 +109,17 @@ public class User implements UserDetails {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 }
