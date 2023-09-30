@@ -1,6 +1,7 @@
 package com.deciploy.backend.modules.api.team.entity;
 
 import com.deciploy.backend.modules.api.company.entity.Company;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class Team {
 
     private String description;
 
+    @JsonIgnore
     @ManyToOne
     private Company company;
 }
