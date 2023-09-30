@@ -1,9 +1,7 @@
 package com.deciploy.backend.modules.api.team.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.deciploy.backend.modules.api.company.entity.Company;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -16,4 +14,7 @@ public class Team {
     private String name;
 
     private String description;
+
+    @ManyToOne
+    private Company company;
 }
