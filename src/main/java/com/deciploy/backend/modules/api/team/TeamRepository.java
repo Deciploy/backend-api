@@ -1,0 +1,7 @@
+package com.deciploy.backend.modules.api.team;
+
+import com.deciploy.backend.modules.api.team.entity.Team;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TeamRepository extends JpaRepository<Team, String> {
+}
