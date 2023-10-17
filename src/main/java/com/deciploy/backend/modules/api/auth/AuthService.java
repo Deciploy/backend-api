@@ -1,11 +1,13 @@
 package com.deciploy.backend.modules.api.auth;
 
 import com.deciploy.backend.modules.api.auth.dto.LoginRequest;
+import com.deciploy.backend.modules.api.auth.dto.LoginResponse;
 import com.deciploy.backend.modules.api.auth.dto.RegisterRequest;
 import com.deciploy.backend.modules.api.user.CustomerUserDetailsService;
 import com.deciploy.backend.modules.api.user.UserService;
 import com.deciploy.backend.modules.api.user.entity.User;
 import com.deciploy.backend.modules.jwt.JwtTokenProvider;
+import com.deciploy.backend.modules.jwt.TokenData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -41,7 +43,7 @@ public class AuthService {
         );
     }
 
-    public String login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         User user = userService.getUserByEmail(loginRequest.email());
 
         if (user == null) {
@@ -52,7 +54,9 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is incorrect");
         }
 
-        return jwtTokenProvider.createToken(user.getUsername(), user.getAuthorities());
+        TokenData token = jwtTokenProvider.createToken(user.getUsername(), user.getAuthorities());
+
+        return new LoginResponse(token, user);
     }
 
     public User getAuthenticatedUser() {

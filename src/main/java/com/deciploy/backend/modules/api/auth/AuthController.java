@@ -1,13 +1,14 @@
 package com.deciploy.backend.modules.api.auth;
 
 import com.deciploy.backend.modules.api.auth.dto.LoginRequest;
+import com.deciploy.backend.modules.api.auth.dto.LoginResponse;
 import com.deciploy.backend.modules.api.auth.dto.RegisterRequest;
-import com.deciploy.backend.modules.api.auth.dto.RegisterResponse;
 import com.deciploy.backend.modules.api.common.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Secured("ADMIN")
     @PostMapping("/register")
     public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);
@@ -28,8 +30,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
-        String token = authService.login(loginRequest);
-        return ApiResponse.data(new RegisterResponse(token));
+        LoginResponse response = authService.login(loginRequest);
+        return ApiResponse.data(response);
     }
 
 }

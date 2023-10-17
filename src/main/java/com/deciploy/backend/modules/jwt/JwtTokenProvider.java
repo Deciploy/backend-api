@@ -59,15 +59,18 @@ public class JwtTokenProvider {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String createToken(String username, Collection<? extends GrantedAuthority> appUserRoles) {
-        return Jwts.builder()
+    public TokenData createToken(String username, Collection<? extends GrantedAuthority> appUserRoles) {
+        Date expirationDate = new Date(System.currentTimeMillis() + validityInMilliseconds);
+        
+        String token = Jwts.builder()
                 .setSubject(username)
                 .claim("roles", appUserRoles)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + validityInMilliseconds))
+                .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, getSignKey())
                 .compact();
 
+        return new TokenData(token, expirationDate.toString());
     }
 
 

@@ -1,7 +1,10 @@
 package com.deciploy.backend.modules.api.user.entity;
 
+import com.deciploy.backend.modules.api.company.entity.Company;
+import com.deciploy.backend.modules.api.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,24 +26,33 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Getter
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+
+    @ManyToOne
+    private Company company;
+
+    @ManyToOne
+    private Team team;
 
     public User() {
 
     }
 
-    public User(String fullName, String email, String password, String[] roles) {
+    public User(String fullName, String email, String password, String[] roles, Company company, Team team) {
         this.email = email;
         this.fullName = fullName;
         this.password = password;
         this.roles = Arrays.stream(roles).toList();
+        this.company = company;
+        this.team = team;
     }
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role)).toList();
+        return roles.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override
@@ -99,5 +111,17 @@ public class User implements UserDetails {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

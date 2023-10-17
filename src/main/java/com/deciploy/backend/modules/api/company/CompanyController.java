@@ -7,10 +7,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/company")
+@Secured("ADMIN")
 @Tag(name = "Company", description = "Company API for create and manage company")
 @SecurityRequirement(name = "Bearer Authentication")
 public class CompanyController {
