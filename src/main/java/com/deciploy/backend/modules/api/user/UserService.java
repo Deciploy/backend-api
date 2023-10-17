@@ -33,9 +33,9 @@ public class UserService {
     @Autowired
     private TeamRepository teamRepository;
 
-    public User saveUser(String fullName, String email, String password, String[] roles) {
+    public void saveUser(String fullName, String email, String password, String[] roles) {
         User user = new User(fullName, email, password, roles, null, null);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public void saveUser(CreateUserRequest createUserRequest) {
@@ -47,7 +47,7 @@ public class UserService {
         Team team = null;
         User authenticatedUser = authService.getAuthenticatedUser();
 
-        if (Arrays.stream(createUserRequest.roles()).anyMatch(role -> role.equals("MANAGER"))) {
+        if (Arrays.asList(createUserRequest.roles()).contains("MANAGER")) {
             if (createUserRequest.companyId() != null) {
                 company = companyRepository.findById(createUserRequest.companyId()).orElse(null);
             } else if (authenticatedUser.getCompany() != null) {
@@ -57,7 +57,7 @@ public class UserService {
             }
         }
 
-        if (Arrays.stream(createUserRequest.roles()).anyMatch(role -> role.equals("EMPLOYEE"))) {
+        if (Arrays.asList(createUserRequest.roles()).contains("EMPLOYEE")) {
             if (createUserRequest.teamId() != null) {
                 team = teamRepository.findById(createUserRequest.teamId()).orElse(null);
                 company = authenticatedUser.getCompany();
