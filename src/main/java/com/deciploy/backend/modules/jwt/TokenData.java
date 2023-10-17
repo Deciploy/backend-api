@@ -1,4 +1,4 @@
-package com.deciploy.backend.modules.api.user.dto;
+package com.deciploy.backend.modules.jwt;
 
 public record TokenData(
         String token,
