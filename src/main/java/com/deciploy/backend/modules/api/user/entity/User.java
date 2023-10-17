@@ -4,6 +4,7 @@ import com.deciploy.backend.modules.api.company.entity.Company;
 import com.deciploy.backend.modules.api.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Getter
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
@@ -50,7 +52,7 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role)).toList();
+        return roles.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override
@@ -115,11 +117,11 @@ public class User implements UserDetails {
         return company;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     public Team getTeam() {
         return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

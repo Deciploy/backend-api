@@ -1,8 +1,8 @@
 package com.deciploy.backend.modules.api.auth;
 
 import com.deciploy.backend.modules.api.auth.dto.LoginRequest;
+import com.deciploy.backend.modules.api.auth.dto.LoginResponse;
 import com.deciploy.backend.modules.api.auth.dto.RegisterRequest;
-import com.deciploy.backend.modules.api.auth.dto.RegisterResponse;
 import com.deciploy.backend.modules.api.common.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,8 +30,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
-        String token = authService.login(loginRequest);
-        return ApiResponse.data(new RegisterResponse(token));
+        LoginResponse response = authService.login(loginRequest);
+        return ApiResponse.data(response);
     }
 
 }
