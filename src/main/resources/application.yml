@@ -4,7 +4,6 @@ spring:
       ddl-auto: update
   flyway:
     baseline-on-migrate: true
-    out-of-order: true
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
