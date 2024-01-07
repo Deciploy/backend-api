@@ -3,6 +3,7 @@ spring:
     hibernate:
       ddl-auto: update
   flyway:
+    enabled: false
     baseline-on-migrate: true
     out-of-order: true
   datasource:
