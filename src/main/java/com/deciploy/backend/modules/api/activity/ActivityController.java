@@ -30,4 +30,6 @@ public class ActivityController {
 
         return ApiResponse.success("Activity synced successfully");
     }
+
+
 }

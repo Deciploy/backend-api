@@ -3,6 +3,7 @@ package com.deciploy.backend.modules.api.activity.entity;
 import com.deciploy.backend.modules.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -24,6 +25,6 @@ public class Activity {
 
     private Date endTime;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
     private Date syncTime;
 }
