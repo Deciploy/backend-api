@@ -46,4 +46,8 @@ public class ActivityService {
 
     }
 
+    public List<Activity> findByUser(String userId) {
+        return activityRepository.findActivityByUserId(userId);
+    }
+
 }
