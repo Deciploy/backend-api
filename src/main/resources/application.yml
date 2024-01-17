@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: ${DB_DDL_AUTO}
   flyway:
     enabled: false
     baseline-on-migrate: true
