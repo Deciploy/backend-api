@@ -1,11 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: ${DB_DDL_AUTO}
-  flyway:
-    enabled: false
-    baseline-on-migrate: true
-    out-of-order: true
+      ddl-auto: update
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
@@ -18,6 +14,9 @@ security:
   jwt:
     secret: 5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
     expire: 3600000
+  super-user:
+    email: superuser@deciploy.com
+    password: dev@1234
 springdoc:
   api-docs:
     path: /api-docs
