@@ -38,5 +38,29 @@ public class TeamService {
         return teamRepository.findAllByCompany(authService.getAuthenticatedUser().getCompany());
     }
 
+    public void update(String id, CreateTeamRequest createTeamRequest) {
+        Company company = authService.getAuthenticatedUser().getCompany();
+        Team team = teamRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found"));
+
+        if (!team.getCompany().getId().equals(company.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to update this team");
+        }
+
+        team.setName(createTeamRequest.name());
+        team.setDescription(createTeamRequest.description());
+        teamRepository.save(team);
+    }
+
+    public void delete(String id) {
+        Company company = authService.getAuthenticatedUser().getCompany();
+        Team team = teamRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found"));
+
+        if (!team.getCompany().getId().equals(company.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to delete this team");
+        }
+
+        teamRepository.delete(team);
+    }
+
 
 }

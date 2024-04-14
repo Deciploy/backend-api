@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("api/user")
-@Secured("MANAGER")
+@Secured({"MANAGER", "ADMIN"})
 public class UserController {
 
     @Autowired
