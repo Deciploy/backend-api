@@ -28,8 +28,6 @@ public class Company {
 
     private String contactNumber;
 
-    private String contactPerson;
-
     @JsonIgnore
     @ManyToOne
     private User createdBy;
