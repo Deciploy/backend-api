@@ -19,14 +19,14 @@ public class CompanyService {
     private CompanyRepository companyRepository;
 
     public void register(CompanyRegisterRequest companyRegisterRequest) {
-        Company company = new Company();
-        company.setName(companyRegisterRequest.name());
-        company.setEmail(companyRegisterRequest.email());
-        company.setAddress(companyRegisterRequest.address());
-        company.setContactNumber(companyRegisterRequest.contactNumber());
-        company.setContactPerson(companyRegisterRequest.contactPerson());
-        company.setCreatedBy(authService.getAuthenticatedUser());
-
+        Company company = Company.builder()
+                .name(companyRegisterRequest.name())
+                .email(companyRegisterRequest.email())
+                .address(companyRegisterRequest.address())
+                .contactNumber(companyRegisterRequest.contactNumber())
+                .contactPerson(companyRegisterRequest.contactPerson())
+                .createdBy(authService.getAuthenticatedUser())
+                .build();
         try {
             companyRepository.save(company);
         } catch (Exception e) {
