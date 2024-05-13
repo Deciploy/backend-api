@@ -31,7 +31,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, String role) {
         Optional<User> user = userService.getUserByEmail(loginRequest.email());
 
         if (user.isEmpty()) {
@@ -40,6 +40,10 @@ public class AuthService {
 
         if (!passwordEncoder.matches(loginRequest.password(), user.get().getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is incorrect");
+        }
+
+        if (!user.get().getRoles().contains(role)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have required role");
         }
 
         TokenData token = jwtTokenProvider.createToken(user.get().getUsername(), user.get().getAuthorities());

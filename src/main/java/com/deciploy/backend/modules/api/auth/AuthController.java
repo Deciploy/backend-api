@@ -21,7 +21,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) {
-        LoginResponse response = authService.login(loginRequest);
+        LoginResponse response = authService.login(loginRequest, "ADMIN");
+        return ApiResponse.data(response);
+    }
+
+    @PostMapping("/login/employee")
+    public ResponseEntity loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse response = authService.login(loginRequest, "EMPLOYEE");
+        return ApiResponse.data(response);
+    }
+
+    @PostMapping("/login/manger")
+    public ResponseEntity loginManager(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse response = authService.login(loginRequest, "MANAGER");
         return ApiResponse.data(response);
     }
 
