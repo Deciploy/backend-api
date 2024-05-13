@@ -43,6 +43,17 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void saveUser(String fullName, String email, String password, String[] roles, Company company) {
+        User user = User.builder()
+                .fullName(fullName)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .company(company)
+                .roles(List.of(roles))
+                .build();
+        userRepository.save(user);
+    }
+
     public void saveUser(CreateUserRequest createUserRequest) {
         if (userRepository.findByEmail(createUserRequest.email()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with this email already exists");
