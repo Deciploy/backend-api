@@ -4,7 +4,10 @@ import com.deciploy.backend.modules.api.company.entity.Company;
 import com.deciploy.backend.modules.api.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +18,9 @@ import java.util.List;
 
 @Entity(name = "user_account")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,19 +41,6 @@ public class User implements UserDetails {
 
     @ManyToOne
     private Team team;
-
-    public User() {
-
-    }
-
-    public User(String fullName, String email, String password, String[] roles, Company company, Team team) {
-        this.email = email;
-        this.fullName = fullName;
-        this.password = password;
-        this.roles = Arrays.stream(roles).toList();
-        this.company = company;
-        this.team = team;
-    }
 
     @Override
     @JsonIgnore

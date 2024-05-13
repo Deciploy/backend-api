@@ -34,7 +34,12 @@ public class UserService {
     private TeamRepository teamRepository;
 
     public void saveUser(String fullName, String email, String password, String[] roles) {
-        User user = new User(fullName, email, password, roles, null, null);
+        User user = User.builder()
+                .fullName(fullName)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .roles(List.of(roles))
+                .build();
         userRepository.save(user);
     }
 
@@ -66,14 +71,14 @@ public class UserService {
             }
         }
 
-        User user = new User(
-                createUserRequest.fullName(),
-                createUserRequest.email(),
-                passwordEncoder.encode(createUserRequest.password()),
-                createUserRequest.roles(),
-                company,
-                team
-        );
+        User user = User.builder()
+                .fullName(createUserRequest.fullName())
+                .email(createUserRequest.email())
+                .password(passwordEncoder.encode(createUserRequest.password()))
+                .roles(List.of(createUserRequest.roles()))
+                .company(company)
+                .team(team)
+                .build();
         userRepository.save(user);
     }
 
