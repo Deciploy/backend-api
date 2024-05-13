@@ -32,7 +32,7 @@ public class CompanyService {
                 .name(companyRegisterRequest.name())
                 .email(companyRegisterRequest.email())
                 .address(companyRegisterRequest.address())
-                .contactNumber(companyRegisterRequest.contactNumber())
+                .phone(companyRegisterRequest.phone())
                 .createdBy(authService.getAuthenticatedUser())
                 .build();
         try {

@@ -26,7 +26,7 @@ public class Company {
 
     private String address;
 
-    private String contactNumber;
+    private String phone;
 
     @JsonIgnore
     @ManyToOne
