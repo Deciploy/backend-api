@@ -20,6 +20,6 @@ public record CompanyRegisterRequest(
         String contactNumber,
 
         @NotBlank()
-        String contactPerson
+        CompanyUser user
 ) {
 }
