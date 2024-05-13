@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataLoader implements ApplicationRunner {
+public class SuperuserLoader implements ApplicationRunner {
     @Value("${security.super-user.email}")
     String superUserEmail;
     @Value("${security.super-user.password}")
@@ -25,7 +25,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void loadUsers() {
-        if (userService.getUserByEmail(superUserEmail) != null) {
+        if (userService.getUserByEmail(superUserEmail).isPresent()) {
             return;
         }
 
