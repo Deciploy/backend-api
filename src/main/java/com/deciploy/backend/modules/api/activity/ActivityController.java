@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/activity")
-@Secured("ADMIN")
+@Secured("EMPLOYEE")
 @Tag(name = "Activity", description = "Activity API for sync and manage activity")
 @SecurityRequirement(name = "Bearer Authentication")
 public class ActivityController {
