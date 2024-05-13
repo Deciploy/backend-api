@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
     @Autowired
@@ -44,19 +46,19 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        User user = userService.getUserByEmail(loginRequest.email());
+        Optional<User> user = userService.getUserByEmail(loginRequest.email());
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with this email does not exist");
         }
 
-        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), user.get().getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is incorrect");
         }
 
-        TokenData token = jwtTokenProvider.createToken(user.getUsername(), user.getAuthorities());
+        TokenData token = jwtTokenProvider.createToken(user.get().getUsername(), user.get().getAuthorities());
 
-        return new LoginResponse(token, user);
+        return new LoginResponse(token, user.get());
     }
 
     public User getAuthenticatedUser() {
