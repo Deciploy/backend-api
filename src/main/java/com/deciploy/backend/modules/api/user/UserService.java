@@ -84,4 +84,25 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findUsersByCompany(authService.getAuthenticatedUser().getCompany());
     }
+
+    public void updateUser(String id, CreateUserRequest createUserRequest) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        user.setFullName(createUserRequest.fullName());
+        user.setEmail(createUserRequest.email());
+        user.setRoles(createUserRequest.roles());
+        userRepository.save(user);
+    }
+
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        userRepository.delete(user);
+    }
 }
