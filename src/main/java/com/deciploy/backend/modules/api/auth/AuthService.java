@@ -2,7 +2,6 @@ package com.deciploy.backend.modules.api.auth;
 
 import com.deciploy.backend.modules.api.auth.dto.LoginRequest;
 import com.deciploy.backend.modules.api.auth.dto.LoginResponse;
-import com.deciploy.backend.modules.api.auth.dto.RegisterRequest;
 import com.deciploy.backend.modules.api.user.CustomerUserDetailsService;
 import com.deciploy.backend.modules.api.user.UserService;
 import com.deciploy.backend.modules.api.user.entity.User;
@@ -31,19 +30,6 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    public void register(RegisterRequest registerRequest) {
-        if (userService.getUserByEmail(registerRequest.email()) != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with this email already exists");
-        }
-
-        userService.saveUser(
-                registerRequest.fullName(),
-                registerRequest.email(),
-                passwordEncoder.encode(registerRequest.password()),
-                registerRequest.roles()
-        );
-    }
 
     public LoginResponse login(LoginRequest loginRequest) {
         Optional<User> user = userService.getUserByEmail(loginRequest.email());
