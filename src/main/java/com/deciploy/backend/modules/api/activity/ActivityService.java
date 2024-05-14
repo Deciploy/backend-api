@@ -41,7 +41,6 @@ public class ActivityService {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong");
         }
-
     }
 
     public List<Activity> findByUser(String userId) {
