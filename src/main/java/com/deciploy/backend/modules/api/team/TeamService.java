@@ -27,10 +27,11 @@ public class TeamService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Team with this name already exists");
         }
 
-        Team team = new Team();
-        team.setName(createTeamRequest.name());
-        team.setDescription(createTeamRequest.description());
-        team.setCompany(company);
+        Team team = Team.builder()
+                .name(createTeamRequest.name())
+                .description(createTeamRequest.description())
+                .company(company)
+                .build();
         teamRepository.save(team);
     }
 
