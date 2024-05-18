@@ -31,7 +31,7 @@ public class AuthController {
         return ApiResponse.data(response);
     }
 
-    @PostMapping("/login/manger")
+    @PostMapping("/login/manager")
     public ResponseEntity loginManager(@Valid @RequestBody LoginRequest loginRequest) {
         LoginResponse response = authService.login(loginRequest, "MANAGER");
         return ApiResponse.data(response);
