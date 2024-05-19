@@ -26,24 +26,21 @@ public class ActivityService {
         final DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
 
         try {
-            for (ActivitySyncRequest activitySyncRequest :
-                    activitySyncRequests) {
-                Activity activity = new Activity();
-                activity.setName(activitySyncRequest.name());
-                activity.setTitle(activitySyncRequest.title());
-                activity.setStartTime(dateFormat.parse(activitySyncRequest.startTime()));
-                activity.setEndTime(dateFormat.parse(activitySyncRequest.endTime()));
-                activity.setUser(authService.getAuthenticatedUser());
-
+            for (ActivitySyncRequest activitySyncRequest : activitySyncRequests) {
+                Activity activity = Activity.builder()
+                        .name(activitySyncRequest.name())
+                        .title(activitySyncRequest.title())
+                        .startTime(dateFormat.parse(activitySyncRequest.startTime()))
+                        .endTime(dateFormat.parse(activitySyncRequest.endTime()))
+                        .user(authService.getAuthenticatedUser())
+                        .build();
                 activityRepository.save(activity);
             }
-
         } catch (ParseException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong");
         }
-
     }
 
     public List<Activity> findByUser(String userId) {

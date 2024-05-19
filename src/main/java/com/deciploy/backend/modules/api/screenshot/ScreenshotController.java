@@ -1,7 +1,7 @@
-package com.deciploy.backend.modules.api.activity;
+package com.deciploy.backend.modules.api.screenshot;
 
-import com.deciploy.backend.modules.api.activity.dto.ActivitySyncRequest;
 import com.deciploy.backend.modules.api.common.ApiResponse;
+import com.deciploy.backend.modules.api.screenshot.dto.ScreenshotRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -10,26 +10,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("api/activity")
+@RequestMapping("api/screenshot")
 @Secured("EMPLOYEE")
-@Tag(name = "Activity", description = "Activity API for sync and manage activity")
+@Tag(name = "Screenshot", description = "Screenshot API for save and manage screenshot")
 @SecurityRequirement(name = "Bearer Authentication")
-public class ActivityController {
+public class ScreenshotController {
     @Autowired
-    private ActivityService activityService;
+    private ScreenshotService screenshotService;
 
     @PostMapping()
-    public ResponseEntity sync(@Valid @RequestBody List<ActivitySyncRequest> activitySyncRequests) {
-        activityService.sync(activitySyncRequests);
+    public ResponseEntity sync(@Valid @RequestBody ScreenshotRequest screenshotRequest) {
+        screenshotService.save(screenshotRequest);
 
-        return ApiResponse.success("Activity synced successfully");
+        return ApiResponse.success("Screenshot save successfully");
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity findByUser(@PathVariable String userId) {
-        return ApiResponse.data(activityService.findByUser(userId));
+        return ApiResponse.data(screenshotService.findByUser(userId));
     }
 }
