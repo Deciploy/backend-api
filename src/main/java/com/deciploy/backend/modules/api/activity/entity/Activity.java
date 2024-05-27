@@ -1,34 +1,36 @@
-package com.deciploy.backend.modules.api.company.entity;
+package com.deciploy.backend.modules.api.activity.entity;
 
 import com.deciploy.backend.modules.api.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Company {
+public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true)
+    @ManyToOne
+    private User user;
+
     private String name;
 
-    @Column(unique = true)
-    private String email;
+    private String title;
 
-    private String address;
+    private Date startTime;
 
-    private String phone;
+    private Date endTime;
 
-    @JsonIgnore
-    @ManyToOne
-    private User createdBy;
+    @CreationTimestamp
+    private Date syncTime;
 }

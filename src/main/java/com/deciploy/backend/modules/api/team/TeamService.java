@@ -27,15 +27,40 @@ public class TeamService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Team with this name already exists");
         }
 
-        Team team = new Team();
-        team.setName(createTeamRequest.name());
-        team.setDescription(createTeamRequest.description());
-        team.setCompany(company);
+        Team team = Team.builder()
+                .name(createTeamRequest.name())
+                .description(createTeamRequest.description())
+                .company(company)
+                .build();
         teamRepository.save(team);
     }
 
     public List<Team> getAll() {
         return teamRepository.findAllByCompany(authService.getAuthenticatedUser().getCompany());
+    }
+
+    public void update(String id, CreateTeamRequest createTeamRequest) {
+        Company company = authService.getAuthenticatedUser().getCompany();
+        Team team = teamRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found"));
+
+        if (!team.getCompany().getId().equals(company.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to update this team");
+        }
+
+        team.setName(createTeamRequest.name());
+        team.setDescription(createTeamRequest.description());
+        teamRepository.save(team);
+    }
+
+    public void delete(String id) {
+        Company company = authService.getAuthenticatedUser().getCompany();
+        Team team = teamRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found"));
+
+        if (!team.getCompany().getId().equals(company.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to delete this team");
+        }
+
+        teamRepository.delete(team);
     }
 
 

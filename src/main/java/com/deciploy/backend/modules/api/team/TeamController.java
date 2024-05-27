@@ -29,4 +29,16 @@ public class TeamController {
     public ResponseEntity getAll() {
         return ApiResponse.data(teamService.getAll());
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity update(@PathVariable String id, @Valid @RequestBody CreateTeamRequest createTeamRequest) {
+        teamService.update(id, createTeamRequest);
+        return ApiResponse.success("Team updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable String id) {
+        teamService.delete(id);
+        return ApiResponse.success("Team deleted successfully");
+    }
 }

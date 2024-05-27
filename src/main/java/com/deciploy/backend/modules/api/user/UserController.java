@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("api/user")
-@Secured("MANAGER")
+@Secured({"MANAGER", "ADMIN"})
 public class UserController {
 
     @Autowired
@@ -30,4 +30,17 @@ public class UserController {
     public ResponseEntity findAll() {
         return ApiResponse.data(userService.findAll());
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity updateUser(@PathVariable String id, @Valid @RequestBody CreateUserRequest createUserRequest) {
+        userService.updateUser(id, createUserRequest);
+        return ApiResponse.success("User updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return ApiResponse.success("User deleted successfully");
+    }
+
 }

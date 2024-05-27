@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -34,7 +35,23 @@ public class UserService {
     private TeamRepository teamRepository;
 
     public void saveUser(String fullName, String email, String password, String[] roles) {
-        User user = new User(fullName, email, password, roles, null, null);
+        User user = User.builder()
+                .fullName(fullName)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .roles(List.of(roles))
+                .build();
+        userRepository.save(user);
+    }
+
+    public void saveUser(String fullName, String email, String password, String[] roles, Company company) {
+        User user = User.builder()
+                .fullName(fullName)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .company(company)
+                .roles(List.of(roles))
+                .build();
         userRepository.save(user);
     }
 
@@ -66,22 +83,43 @@ public class UserService {
             }
         }
 
-        User user = new User(
-                createUserRequest.fullName(),
-                createUserRequest.email(),
-                passwordEncoder.encode(createUserRequest.password()),
-                createUserRequest.roles(),
-                company,
-                team
-        );
+        User user = User.builder()
+                .fullName(createUserRequest.fullName())
+                .email(createUserRequest.email())
+                .password(passwordEncoder.encode(createUserRequest.password()))
+                .roles(List.of(createUserRequest.roles()))
+                .company(company)
+                .team(team)
+                .build();
         userRepository.save(user);
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public List<User> findAll() {
         return userRepository.findUsersByCompany(authService.getAuthenticatedUser().getCompany());
+    }
+
+    public void updateUser(String id, CreateUserRequest createUserRequest) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        user.setFullName(createUserRequest.fullName());
+        user.setEmail(createUserRequest.email());
+        user.setRoles(createUserRequest.roles());
+        userRepository.save(user);
+    }
+
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        userRepository.delete(user);
     }
 }
