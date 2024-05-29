@@ -40,4 +40,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/deciploy-api:${{ runner.build_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/deciploy-api:latest
