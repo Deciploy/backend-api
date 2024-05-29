@@ -41,7 +41,6 @@ public class CompanyService {
             userService.saveUser(
                     companyRegisterRequest.user().fullName(),
                     companyRegisterRequest.user().email(),
-                    companyRegisterRequest.user().password(),
                     new String[]{"MANAGER"},
                     company
             );

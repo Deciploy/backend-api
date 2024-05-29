@@ -7,6 +7,7 @@ import com.deciploy.backend.modules.api.team.TeamRepository;
 import com.deciploy.backend.modules.api.team.entity.Team;
 import com.deciploy.backend.modules.api.user.dto.CreateUserRequest;
 import com.deciploy.backend.modules.api.user.entity.User;
+import com.deciploy.backend.modules.generator.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private PasswordGenerator passwordGenerator;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -33,6 +37,16 @@ public class UserService {
 
     @Autowired
     private TeamRepository teamRepository;
+
+    public void saveUser(String fullName, String email, String[] roles) {
+        User user = User.builder()
+                .fullName(fullName)
+                .email(email)
+                .password(passwordEncoder.encode(passwordGenerator.generatePassword()))
+                .roles(List.of(roles))
+                .build();
+        userRepository.save(user);
+    }
 
     public void saveUser(String fullName, String email, String password, String[] roles) {
         User user = User.builder()
@@ -44,11 +58,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void saveUser(String fullName, String email, String password, String[] roles, Company company) {
+    public void saveUser(String fullName, String email, String[] roles, Company company) {
         User user = User.builder()
                 .fullName(fullName)
                 .email(email)
-                .password(passwordEncoder.encode(password))
+                .password(passwordEncoder.encode(passwordGenerator.generatePassword()))
                 .company(company)
                 .roles(List.of(roles))
                 .build();
@@ -86,7 +100,7 @@ public class UserService {
         User user = User.builder()
                 .fullName(createUserRequest.fullName())
                 .email(createUserRequest.email())
-                .password(passwordEncoder.encode(createUserRequest.password()))
+                .password(passwordEncoder.encode(passwordGenerator.generatePassword()))
                 .roles(List.of(createUserRequest.roles()))
                 .company(company)
                 .team(team)

@@ -10,8 +10,6 @@ public record CreateUserRequest(
 
         @NotBlank() @Email() String email,
 
-        @NotBlank() String password,
-
         @NotEmpty() @Size(min = 1) String[] roles,
 
         String companyId,
