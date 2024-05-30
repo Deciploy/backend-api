@@ -122,9 +122,15 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
+        Team team = teamRepository.findById(createUserRequest.teamId()).orElse(null);
+        if (team == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found");
+        }
+
         user.setFullName(createUserRequest.fullName());
         user.setEmail(createUserRequest.email());
         user.setRoles(createUserRequest.roles());
+        user.setTeam(team);
         userRepository.save(user);
     }
 
