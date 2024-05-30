@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -122,9 +123,15 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
+        Team team = teamRepository.findById(createUserRequest.teamId()).orElse(null);
+        if (team == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found");
+        }
+
         user.setFullName(createUserRequest.fullName());
         user.setEmail(createUserRequest.email());
         user.setRoles(createUserRequest.roles());
+        user.setTeam(team);
         userRepository.save(user);
     }
 
@@ -132,6 +139,9 @@ public class UserService {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        if (Objects.equals(user.getId(), authService.getAuthenticatedUser().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot delete yourself");
         }
 
         userRepository.delete(user);
