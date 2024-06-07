@@ -112,7 +112,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public List<User> findAll() {
+    public List<User> findAll(Optional<String> teamId) {
+        if (teamId.isPresent()) {
+            return userRepository.findAllUsers(authService.getAuthenticatedUser().getCompany().getId(), teamId.get());
+        }
         return userRepository.findUsersByCompany(authService.getAuthenticatedUser().getCompany());
     }
 
