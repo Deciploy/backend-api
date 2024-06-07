@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("api/screenshot")
 @Secured("EMPLOYEE")
@@ -27,7 +29,11 @@ public class ScreenshotController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity findByUser(@PathVariable String userId) {
-        return ApiResponse.data(screenshotService.findByUser(userId));
+    public ResponseEntity findByUser(
+            @PathVariable String userId,
+            @RequestParam Optional<String> from,
+            @RequestParam Optional<String> to
+    ) {
+        return ApiResponse.data(screenshotService.findByUser(userId, from, to));
     }
 }
