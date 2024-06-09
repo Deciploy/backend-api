@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Tag(name = "User", description = "User API")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
@@ -27,8 +29,10 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity findAll() {
-        return ApiResponse.data(userService.findAll());
+    public ResponseEntity findAll(
+            @RequestParam Optional<String> teamId
+    ) {
+        return ApiResponse.data(userService.findAll(teamId));
     }
 
     @PatchMapping("/{id}")

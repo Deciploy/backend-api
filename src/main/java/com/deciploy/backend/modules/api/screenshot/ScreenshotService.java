@@ -13,18 +13,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class ScreenshotService {
+    final DateFormat dateFormat;
     @Autowired
     private AuthService authService;
-
     @Autowired
     private ScreenshotRepository repository;
 
-    public void save(ScreenshotRequest screenshotRequests) {
-        final DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
+    public ScreenshotService() {
+        dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
+    }
 
+    public void save(ScreenshotRequest screenshotRequests) {
         try {
             Screenshot screenshot = Screenshot.builder()
                     .capturedAt(dateFormat.parse(screenshotRequests.capturedAt()))
@@ -39,8 +42,25 @@ public class ScreenshotService {
         }
     }
 
-    public List<Screenshot> findByUser(String userId) {
+    public List<Screenshot> findByUser(String userId, Optional<String> from, Optional<String> to) {
+        try {
+            if (from.isPresent() && to.isEmpty()) {
+                return repository.findByUserIdAndCapturedAtAfter(userId, dateFormat.parse(from.get()));
+            }
+
+            if (to.isPresent() && from.isEmpty()) {
+                return repository.findByUserIdAndCapturedAtBefore(userId, dateFormat.parse(to.get()));
+            }
+
+            if (from.isPresent() && to.isPresent()) {
+                return repository.findByUserIdBetween(userId, dateFormat.parse(from.get()), dateFormat.parse(to.get()));
+            }
+
+
+        } catch (ParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
+        }
+
         return repository.findScreenshotByUserId(userId);
     }
-
 }
