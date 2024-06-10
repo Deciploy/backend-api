@@ -23,6 +23,9 @@ public class Activity {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private Application application;
+
     private String name;
 
     private String title;
