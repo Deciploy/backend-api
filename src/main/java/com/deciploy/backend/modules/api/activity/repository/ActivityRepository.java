@@ -1,4 +1,4 @@
-package com.deciploy.backend.modules.api.activity;
+package com.deciploy.backend.modules.api.activity.repository;
 
 import com.deciploy.backend.modules.api.activity.entity.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
