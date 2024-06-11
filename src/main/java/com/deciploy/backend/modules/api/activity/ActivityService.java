@@ -29,9 +29,13 @@ public class ActivityService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
-    public void sync(List<ActivitySyncRequest> activitySyncRequests) {
-        final DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
+    private DateFormat dateFormat;
 
+    public ActivityService() {
+        dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
+    }
+
+    public void sync(List<ActivitySyncRequest> activitySyncRequests) {
         try {
             for (ActivitySyncRequest activitySyncRequest : activitySyncRequests) {
                 Optional<Application> application = applicationRepository
@@ -49,7 +53,7 @@ public class ActivityService {
                         .user(authService.getAuthenticatedUser())
                         .application(application.get())
                         .build();
-                
+
                 activityRepository.save(activity);
             }
         } catch (ParseException e) {
