@@ -20,16 +20,13 @@ import java.util.Optional;
 
 @Service
 public class ActivityService {
+    private final DateFormat dateFormat;
     @Autowired
     private AuthService authService;
-
     @Autowired
     private ActivityRepository activityRepository;
-
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    private DateFormat dateFormat;
 
     public ActivityService() {
         dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
