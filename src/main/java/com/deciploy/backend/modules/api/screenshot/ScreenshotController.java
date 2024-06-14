@@ -28,12 +28,12 @@ public class ScreenshotController {
         return ApiResponse.success("Screenshot save successfully");
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping()
     public ResponseEntity findByUser(
-            @PathVariable String userId,
+            @RequestParam String user,
             @RequestParam Optional<String> from,
             @RequestParam Optional<String> to
     ) {
-        return ApiResponse.data(screenshotService.findByUser(userId, from, to));
+        return ApiResponse.data(screenshotService.findByUser(user, from, to));
     }
 }
