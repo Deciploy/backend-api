@@ -36,6 +36,4 @@ public class ApplicationController {
     public ResponseEntity getApplicationTypes() {
         return ApiResponse.data(applicationService.getApplicationTypes());
     }
-
-
 }
