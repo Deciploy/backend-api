@@ -2,9 +2,9 @@ package com.deciploy.backend.modules.api.activity;
 
 import com.deciploy.backend.modules.api.activity.dto.ActivitySyncRequest;
 import com.deciploy.backend.modules.api.activity.entity.Activity;
-import com.deciploy.backend.modules.api.activity.entity.Application;
 import com.deciploy.backend.modules.api.activity.repository.ActivityRepository;
-import com.deciploy.backend.modules.api.activity.repository.ApplicationRepository;
+import com.deciploy.backend.modules.api.application.ApplicationService;
+import com.deciploy.backend.modules.api.application.entity.Application;
 import com.deciploy.backend.modules.api.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class ActivityService {
     @Autowired
     private ActivityRepository activityRepository;
     @Autowired
-    private ApplicationRepository applicationRepository;
+    private ApplicationService applicationService;
 
     public ActivityService() {
         dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
@@ -35,8 +35,8 @@ public class ActivityService {
     public void sync(List<ActivitySyncRequest> activitySyncRequests) {
         try {
             for (ActivitySyncRequest activitySyncRequest : activitySyncRequests) {
-                Optional<Application> application = applicationRepository
-                        .findByIdentifier(activitySyncRequest.name());
+                Optional<Application> application = applicationService
+                        .getApplication(activitySyncRequest.name());
 
                 if (application.isEmpty()) {
                     continue;
@@ -63,5 +63,4 @@ public class ActivityService {
     public List<Activity> findByUser(String userId) {
         return activityRepository.findActivityByUserId(userId);
     }
-
 }
