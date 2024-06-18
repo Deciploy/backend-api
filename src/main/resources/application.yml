@@ -12,8 +12,8 @@ spring:
 
 security:
   jwt:
-    secret: { JWT_SECRET }
-    expire: { JWT_EXPIRE }
+    secret: ${JWT_SECRET}
+    expire: ${JWT_EXPIRE}
   super-user:
     email: superuser@deciploy.com
     password: dev@1234
