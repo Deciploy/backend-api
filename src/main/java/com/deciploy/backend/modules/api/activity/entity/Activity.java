@@ -1,5 +1,6 @@
 package com.deciploy.backend.modules.api.activity.entity;
 
+import com.deciploy.backend.modules.api.application.entity.Application;
 import com.deciploy.backend.modules.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,9 @@ public class Activity {
 
     @ManyToOne
     private User user;
+
+    @ManyToOne
+    private Application application;
 
     private String name;
 
