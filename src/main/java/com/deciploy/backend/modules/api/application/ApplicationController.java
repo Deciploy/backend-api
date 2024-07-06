@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/application")
-@Secured("EMPLOYEE")
+@Secured("MANAGER")
 @Tag(name = "Application", description = "Application API for tracking")
 @SecurityRequirement(name = "Bearer Authentication")
 public class ApplicationController {
