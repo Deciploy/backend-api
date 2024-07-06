@@ -36,7 +36,7 @@ public class ActivityService {
         try {
             for (ActivitySyncRequest activitySyncRequest : activitySyncRequests) {
                 Optional<Application> application = applicationService
-                        .getApplication(activitySyncRequest.name());
+                        .getApplication(activitySyncRequest.name().toLowerCase());
 
                 if (application.isEmpty()) {
                     continue;
