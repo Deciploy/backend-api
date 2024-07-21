@@ -3,7 +3,11 @@ package com.deciploy.backend.modules.api.tracking;
 import com.deciploy.backend.modules.api.activity.entity.Activity;
 import com.deciploy.backend.modules.api.activity.entity.QActivity;
 import com.deciploy.backend.modules.api.activity.repository.ActivityRepository;
+import com.deciploy.backend.modules.api.time.TimeRepository;
+import com.deciploy.backend.modules.api.time.entity.QTime;
+import com.deciploy.backend.modules.api.time.entity.Time;
 import com.deciploy.backend.modules.api.tracking.dto.ActivityFilter;
+import com.deciploy.backend.modules.api.tracking.dto.TimeFilter;
 import com.querydsl.core.BooleanBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,9 @@ public class TrackingService {
 
     @Autowired
     private ActivityRepository activityRepository;
+
+    @Autowired
+    private TimeRepository timeRepository;
 
     public TrackingService() {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
@@ -65,5 +72,37 @@ public class TrackingService {
         }
 
         return (List<Activity>) activityRepository.findAll(builder);
+    }
+
+    public List<Time> getTimes(TimeFilter filter) {
+        QTime qTime = QTime.time;
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (filter.team().isPresent()) {
+            builder.and(qTime.user.team.id.eq(filter.team().get()));
+        }
+
+        if (filter.user().isPresent()) {
+            builder.and(qTime.user.id.eq(filter.user().get()));
+        }
+
+        if (filter.from().isPresent()) {
+            try {
+                builder.and(qTime.clockIn.goe(dateFormat.parse(filter.from().get())));
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
+            }
+        }
+
+        if (filter.to().isPresent()) {
+            try {
+                builder.and(qTime.clockOut.loe(dateFormat.parse(filter.to().get())));
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
+            }
+        }
+
+        return (List<Time>) timeRepository.findAll(builder);
     }
 }
