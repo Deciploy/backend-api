@@ -3,6 +3,7 @@ package com.deciploy.backend.modules.api.tracking;
 
 import com.deciploy.backend.modules.api.common.ApiResponse;
 import com.deciploy.backend.modules.api.tracking.dto.ActivityFilter;
+import com.deciploy.backend.modules.api.tracking.dto.TimeFilter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,10 @@ public class TrackingController {
     @GetMapping("activity")
     public ResponseEntity getTracking(ActivityFilter filter) {
         return ApiResponse.data(trackingService.getTracking(filter));
+    }
+
+    @GetMapping("time")
+    public ResponseEntity getTracking(TimeFilter filter) {
+        return ApiResponse.data(trackingService.getTimes(filter));
     }
 }
