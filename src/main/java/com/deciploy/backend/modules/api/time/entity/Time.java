@@ -19,8 +19,10 @@ public class Time {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date clockIn;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date clockOut;
 
     @ManyToOne
