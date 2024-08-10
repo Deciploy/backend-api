@@ -36,4 +36,8 @@ public class ApplicationService {
     public List<ApplicationType> getApplicationTypes() {
         return applicationTypeRepository.findAll();
     }
+
+    public Optional<ApplicationType> getApplicationTypeFindById(String id) {
+        return applicationTypeRepository.findById(id);
+    }
 }

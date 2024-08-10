@@ -63,5 +63,9 @@ public class TeamService {
         teamRepository.delete(team);
     }
 
+    public Team getById(String id) {
+        return teamRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found"));
+    }
+
 
 }
