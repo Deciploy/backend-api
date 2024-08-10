@@ -2,6 +2,7 @@ package com.deciploy.backend.modules.api.time;
 
 import com.deciploy.backend.modules.api.auth.AuthService;
 import com.deciploy.backend.modules.api.time.entity.Time;
+import com.deciploy.backend.modules.api.time.repository.TimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
