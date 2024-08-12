@@ -1,8 +1,8 @@
 package com.deciploy.backend.modules.api.activity;
 
 import com.deciploy.backend.modules.api.activity.dto.ActivitySyncRequest;
+import com.deciploy.backend.modules.api.activity.dto.ScoreFilter;
 import com.deciploy.backend.modules.api.common.ApiResponse;
-import com.deciploy.backend.modules.api.tracking.dto.ActivityFilter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -35,12 +35,12 @@ public class ActivityController {
     }
 
     @GetMapping("score/employee")
-    public ResponseEntity getEmployeeScore(ActivityFilter filter) {
+    public ResponseEntity getEmployeeScore(ScoreFilter filter) {
         return ApiResponse.data(activityService.getEmployeeScore(filter));
     }
 
     @GetMapping("score/team")
-    public ResponseEntity getTeamScore() {
-        return ApiResponse.data(activityService.getTeamScore());
+    public ResponseEntity getTeamScore(ScoreFilter filter) {
+        return ApiResponse.data(activityService.getTeamScore(filter));
     }
 }

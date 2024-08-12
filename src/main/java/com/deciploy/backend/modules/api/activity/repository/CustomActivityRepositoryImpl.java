@@ -6,6 +6,7 @@ import com.deciploy.backend.modules.api.activity.entity.QActivity;
 import com.deciploy.backend.modules.api.application.entity.QApplication;
 import com.deciploy.backend.modules.api.weigtage.entity.QApplicationTypeWeightage;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -65,6 +66,26 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
                 .fetch();
     }
 
+    @Override
+    public List<TeamScore> getTeamScores(Date date, boolean isFrom) {
+        JPAQuery<TeamScore> query = getTeamScoreQuery();
+
+        if (isFrom) {
+            query.where(qActivity.startTime.goe(date));
+        } else {
+            query.where(qActivity.endTime.loe(date));
+        }
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<TeamScore> getTeamScores(Date from, Date to) {
+        return getTeamScoreQuery()
+                .where(qActivity.startTime.goe(from).and(qActivity.endTime.loe(to)))
+                .fetch();
+    }
+
     private <T> JPAQuery<T> getScoreQuery(Class<T> type) {
         NumberExpression<Integer> score = qActivity.endTime.hour().subtract(qActivity.startTime.hour())
                 .multiply(qApplicationTypeWeightage.weightage.coalesce(0)).sum().as("score");
@@ -72,8 +93,16 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
         BooleanExpression weightageJoinCondition = qApplicationTypeWeightage.applicationType.id.eq(qApplication.type.id)
                 .and(qApplicationTypeWeightage.team.id.eq(qActivity.user.team.id));
 
+        QBean<T> select = null;
+
+        if (type == EmployeeScore.class) {
+            select = Projections.bean(type, qActivity.user, score);
+        } else if (type == TeamScore.class) {
+            select = Projections.bean(type, qActivity.user.team, score);
+        }
+
         return queryFactory
-                .select(Projections.bean(type, qActivity.user, score))
+                .select(select)
                 .from(qActivity)
                 .leftJoin(qApplicationTypeWeightage)
                 .on(weightageJoinCondition);
@@ -84,5 +113,12 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
 
         return query
                 .groupBy(QActivity.activity.user);
+    }
+
+    private JPAQuery<TeamScore> getTeamScoreQuery() {
+        JPAQuery<TeamScore> query = getScoreQuery(TeamScore.class);
+
+        return query
+                .groupBy(QActivity.activity.user.team);
     }
 }

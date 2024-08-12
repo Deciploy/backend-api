@@ -17,4 +17,8 @@ public interface CustomActivityRepository {
 
     List<TeamScore> getTeamScores();
 
+    List<TeamScore> getTeamScores(Date date, boolean isFrom);
+
+    List<TeamScore> getTeamScores(Date from, Date to);
+
 }
