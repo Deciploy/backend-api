@@ -5,6 +5,7 @@ import com.deciploy.backend.modules.api.activity.dto.EmployeeScore;
 import com.deciploy.backend.modules.api.activity.dto.TeamScore;
 import com.deciploy.backend.modules.api.activity.entity.QActivity;
 import com.deciploy.backend.modules.api.application.entity.QApplication;
+import com.deciploy.backend.modules.api.company.entity.Company;
 import com.deciploy.backend.modules.api.weigtage.entity.QApplicationTypeWeightage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
@@ -87,14 +88,14 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
     }
 
     @Override
-    public List<DateCompanyScore> getCompanyScores() {
-        return getCompanyScoreQuery()
+    public List<DateCompanyScore> getCompanyScores(Company company) {
+        return getCompanyScoreQuery(company)
                 .fetch();
     }
 
     @Override
-    public List<DateCompanyScore> getCompanyScores(Date date, boolean isFrom) {
-        JPAQuery<DateCompanyScore> query = getCompanyScoreQuery();
+    public List<DateCompanyScore> getCompanyScores(Company company, Date date, boolean isFrom) {
+        JPAQuery<DateCompanyScore> query = getCompanyScoreQuery(company);
 
         if (isFrom) {
             query.where(qActivity.startTime.goe(date));
@@ -106,8 +107,8 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
     }
 
     @Override
-    public List<DateCompanyScore> getCompanyScores(Date from, Date to) {
-        return getCompanyScoreQuery()
+    public List<DateCompanyScore> getCompanyScores(Company company, Date from, Date to) {
+        return getCompanyScoreQuery(company)
                 .where(qActivity.startTime.goe(from).and(qActivity.endTime.loe(to)))
                 .fetch();
     }
@@ -153,12 +154,13 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
                 .groupBy(QActivity.activity.user.team);
     }
 
-    private JPAQuery<DateCompanyScore> getCompanyScoreQuery() {
+    private JPAQuery<DateCompanyScore> getCompanyScoreQuery(Company company) {
         JPAQuery<DateCompanyScore> query = getScoreQuery(DateCompanyScore.class);
 
         DateTemplate<Date> dateTemplate = Expressions.dateTemplate(Date.class, "date({0})", qActivity.startTime);
 
         return query
+                .where(qActivity.user.company.eq(company))
                 .groupBy(dateTemplate);
     }
 }
