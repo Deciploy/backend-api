@@ -1,5 +1,6 @@
 package com.deciploy.backend.modules.api.activity.repository;
 
+import com.deciploy.backend.modules.api.activity.dto.DateCompanyScore;
 import com.deciploy.backend.modules.api.activity.dto.EmployeeScore;
 import com.deciploy.backend.modules.api.activity.dto.TeamScore;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,11 @@ public interface CustomActivityRepository {
     List<TeamScore> getTeamScores(Date date, boolean isFrom);
 
     List<TeamScore> getTeamScores(Date from, Date to);
+
+    List<DateCompanyScore> getCompanyScores();
+
+    List<DateCompanyScore> getCompanyScores(Date date, boolean isFrom);
+
+    List<DateCompanyScore> getCompanyScores(Date from, Date to);
 
 }

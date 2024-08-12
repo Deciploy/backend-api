@@ -1,5 +1,6 @@
 package com.deciploy.backend.modules.api.activity.repository;
 
+import com.deciploy.backend.modules.api.activity.dto.DateCompanyScore;
 import com.deciploy.backend.modules.api.activity.dto.EmployeeScore;
 import com.deciploy.backend.modules.api.activity.dto.TeamScore;
 import com.deciploy.backend.modules.api.activity.entity.QActivity;
@@ -7,8 +8,7 @@ import com.deciploy.backend.modules.api.application.entity.QApplication;
 import com.deciploy.backend.modules.api.weigtage.entity.QApplicationTypeWeightage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -86,6 +86,32 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
                 .fetch();
     }
 
+    @Override
+    public List<DateCompanyScore> getCompanyScores() {
+        return getCompanyScoreQuery()
+                .fetch();
+    }
+
+    @Override
+    public List<DateCompanyScore> getCompanyScores(Date date, boolean isFrom) {
+        JPAQuery<DateCompanyScore> query = getCompanyScoreQuery();
+
+        if (isFrom) {
+            query.where(qActivity.startTime.goe(date));
+        } else {
+            query.where(qActivity.endTime.loe(date));
+        }
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<DateCompanyScore> getCompanyScores(Date from, Date to) {
+        return getCompanyScoreQuery()
+                .where(qActivity.startTime.goe(from).and(qActivity.endTime.loe(to)))
+                .fetch();
+    }
+
     private <T> JPAQuery<T> getScoreQuery(Class<T> type) {
         NumberExpression<Integer> score = qActivity.endTime.hour().subtract(qActivity.startTime.hour())
                 .multiply(qApplicationTypeWeightage.weightage.coalesce(0)).sum().as("score");
@@ -99,6 +125,11 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
             select = Projections.bean(type, qActivity.user, score);
         } else if (type == TeamScore.class) {
             select = Projections.bean(type, qActivity.user.team, score);
+        } else if (type == DateCompanyScore.class) {
+            DateExpression<Date> date = Expressions.dateTemplate(Date.class, "date({0})", qActivity.startTime);
+            select = Projections.bean(type, date.as("date"), score);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
         }
 
         return queryFactory
@@ -120,5 +151,14 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
 
         return query
                 .groupBy(QActivity.activity.user.team);
+    }
+
+    private JPAQuery<DateCompanyScore> getCompanyScoreQuery() {
+        JPAQuery<DateCompanyScore> query = getScoreQuery(DateCompanyScore.class);
+
+        DateTemplate<Date> dateTemplate = Expressions.dateTemplate(Date.class, "date({0})", qActivity.startTime);
+
+        return query
+                .groupBy(dateTemplate);
     }
 }

@@ -43,4 +43,9 @@ public class ActivityController {
     public ResponseEntity getTeamScore(ScoreFilter filter) {
         return ApiResponse.data(activityService.getTeamScore(filter));
     }
+
+    @GetMapping("score/company")
+    public ResponseEntity getCompanyScore(ScoreFilter filter) {
+        return ApiResponse.data(activityService.getDateCompanyScore(filter));
+    }
 }

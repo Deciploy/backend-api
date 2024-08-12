@@ -1,9 +1,6 @@
 package com.deciploy.backend.modules.api.activity;
 
-import com.deciploy.backend.modules.api.activity.dto.ActivitySyncRequest;
-import com.deciploy.backend.modules.api.activity.dto.EmployeeScore;
-import com.deciploy.backend.modules.api.activity.dto.ScoreFilter;
-import com.deciploy.backend.modules.api.activity.dto.TeamScore;
+import com.deciploy.backend.modules.api.activity.dto.*;
 import com.deciploy.backend.modules.api.activity.entity.Activity;
 import com.deciploy.backend.modules.api.activity.repository.ActivityRepository;
 import com.deciploy.backend.modules.api.application.ApplicationService;
@@ -102,6 +99,26 @@ public class ActivityService {
                 return activityRepository.getTeamScores(toDate, false);
             } else {
                 return activityRepository.getTeamScores();
+            }
+        } catch (ParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
+        }
+    }
+
+    public List<DateCompanyScore> getDateCompanyScore(ScoreFilter filter) {
+        try {
+            if (filter.from().isPresent() && filter.to().isPresent()) {
+                Date fromDate = dateFormat.parse(filter.from().get());
+                Date toDate = dateFormat.parse(filter.to().get());
+                return activityRepository.getCompanyScores(fromDate, toDate);
+            } else if (filter.from().isPresent()) {
+                Date fromDate = dateFormat.parse(filter.from().get());
+                return activityRepository.getCompanyScores(fromDate, true);
+            } else if (filter.to().isPresent()) {
+                Date toDate = dateFormat.parse(filter.to().get());
+                return activityRepository.getCompanyScores(toDate, false);
+            } else {
+                return activityRepository.getCompanyScores();
             }
         } catch (ParseException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
