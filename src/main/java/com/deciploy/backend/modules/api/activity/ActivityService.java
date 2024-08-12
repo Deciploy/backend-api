@@ -8,6 +8,7 @@ import com.deciploy.backend.modules.api.activity.repository.ActivityRepository;
 import com.deciploy.backend.modules.api.application.ApplicationService;
 import com.deciploy.backend.modules.api.application.entity.Application;
 import com.deciploy.backend.modules.api.auth.AuthService;
+import com.deciploy.backend.modules.api.tracking.dto.ActivityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -66,8 +68,24 @@ public class ActivityService {
         return activityRepository.findActivityByUserId(userId);
     }
 
-    public List<EmployeeScore> getEmployeeScore() {
-        return activityRepository.getEmployeeScores();
+    public List<EmployeeScore> getEmployeeScore(ActivityFilter filter) {
+        try {
+            if (filter.from().isPresent() && filter.to().isPresent()) {
+                Date fromDate = dateFormat.parse(filter.from().get());
+                Date toDate = dateFormat.parse(filter.to().get());
+                return activityRepository.getEmployeeScores(fromDate, toDate);
+            } else if (filter.from().isPresent()) {
+                Date fromDate = dateFormat.parse(filter.from().get());
+                return activityRepository.getEmployeeScores(fromDate, true);
+            } else if (filter.to().isPresent()) {
+                Date toDate = dateFormat.parse(filter.to().get());
+                return activityRepository.getEmployeeScores(toDate, false);
+            } else {
+                return activityRepository.getEmployeeScores();
+            }
+        } catch (ParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
+        }
     }
 
     public List<TeamScore> getTeamScore() {

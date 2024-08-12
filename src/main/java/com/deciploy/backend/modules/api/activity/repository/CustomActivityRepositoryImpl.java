@@ -13,6 +13,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 
 public class CustomActivityRepositoryImpl implements CustomActivityRepository {
@@ -33,10 +34,27 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
 
     @Override
     public List<EmployeeScore> getEmployeeScores() {
-        JPAQuery<EmployeeScore> query = getScoreQuery(EmployeeScore.class);
+        return getEmployeeScoreQuery()
+                .fetch();
+    }
 
-        return query
-                .groupBy(QActivity.activity.user)
+    @Override
+    public List<EmployeeScore> getEmployeeScores(Date date, boolean isFrom) {
+        JPAQuery<EmployeeScore> query = getEmployeeScoreQuery();
+
+        if (isFrom) {
+            query.where(qActivity.startTime.goe(date));
+        } else {
+            query.where(qActivity.endTime.loe(date));
+        }
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<EmployeeScore> getEmployeeScores(Date from, Date to) {
+        return getEmployeeScoreQuery()
+                .where(qActivity.startTime.goe(from).and(qActivity.endTime.loe(to)))
                 .fetch();
     }
 
@@ -59,5 +77,12 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
                 .from(qActivity)
                 .leftJoin(qApplicationTypeWeightage)
                 .on(weightageJoinCondition);
+    }
+
+    private JPAQuery<EmployeeScore> getEmployeeScoreQuery() {
+        JPAQuery<EmployeeScore> query = getScoreQuery(EmployeeScore.class);
+
+        return query
+                .groupBy(QActivity.activity.user);
     }
 }
