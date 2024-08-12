@@ -6,7 +6,7 @@ import com.deciploy.backend.modules.api.team.TeamService;
 import com.deciploy.backend.modules.api.team.entity.Team;
 import com.deciploy.backend.modules.api.weigtage.dto.TeamWeightage;
 import com.deciploy.backend.modules.api.weigtage.dto.WeightageSaveRequest;
-import com.deciploy.backend.modules.api.weigtage.entity.Weightage;
+import com.deciploy.backend.modules.api.weigtage.entity.ApplicationTypeWeightage;
 import com.deciploy.backend.modules.api.weigtage.repository.WeightageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class WeightageService {
         Team team = teamService.getById(request.teamId());
         ApplicationType applicationType = applicationService.getApplicationTypeFindById(request.applicationTypeId()).orElseThrow();
 
-        Weightage weightage = Weightage.builder()
+        ApplicationTypeWeightage weightage = ApplicationTypeWeightage.builder()
                 .team(team)
                 .applicationType(applicationType)
                 .weightage(request.weightage())
@@ -52,14 +52,14 @@ public class WeightageService {
                 .toList();
     }
 
-    private List<Weightage> getWeightagesByTeam(Team team) {
+    private List<ApplicationTypeWeightage> getWeightagesByTeam(Team team) {
         List<ApplicationType> applicationTypes = applicationService.getApplicationTypes();
 
         return applicationTypes.stream()
                 .map(applicationType -> weightageRepository
                         .findWeightageByApplicationTypeAndTeam(applicationType, team)
                         .orElse(
-                                Weightage.builder()
+                                ApplicationTypeWeightage.builder()
                                         .team(team)
                                         .applicationType(applicationType)
                                         .weightage(0)

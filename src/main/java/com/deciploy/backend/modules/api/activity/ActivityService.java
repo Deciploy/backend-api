@@ -1,6 +1,8 @@
 package com.deciploy.backend.modules.api.activity;
 
 import com.deciploy.backend.modules.api.activity.dto.ActivitySyncRequest;
+import com.deciploy.backend.modules.api.activity.dto.EmployeeScore;
+import com.deciploy.backend.modules.api.activity.dto.TeamScore;
 import com.deciploy.backend.modules.api.activity.entity.Activity;
 import com.deciploy.backend.modules.api.activity.repository.ActivityRepository;
 import com.deciploy.backend.modules.api.application.ApplicationService;
@@ -62,5 +64,13 @@ public class ActivityService {
 
     public List<Activity> findByUser(String userId) {
         return activityRepository.findActivityByUserId(userId);
+    }
+
+    public List<EmployeeScore> getEmployeeScore() {
+        return activityRepository.getEmployeeScores();
+    }
+
+    public List<TeamScore> getTeamScore() {
+        return activityRepository.getTeamScores();
     }
 }

@@ -32,4 +32,14 @@ public class ActivityController {
     public ResponseEntity findByUser(@PathVariable String userId) {
         return ApiResponse.data(activityService.findByUser(userId));
     }
+
+    @GetMapping("score/employee")
+    public ResponseEntity getEmployeeScore() {
+        return ApiResponse.data(activityService.getEmployeeScore());
+    }
+
+    @GetMapping("score/team")
+    public ResponseEntity getTeamScore() {
+        return ApiResponse.data(activityService.getTeamScore());
+    }
 }
