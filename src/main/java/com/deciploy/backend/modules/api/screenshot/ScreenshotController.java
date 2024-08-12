@@ -7,14 +7,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("api/screenshot")
-@Secured("EMPLOYEE")
 @Tag(name = "Screenshot", description = "Screenshot API for save and manage screenshot")
 @SecurityRequirement(name = "Bearer Authentication")
 public class ScreenshotController {

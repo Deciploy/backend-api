@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Weightage {
+public class ApplicationTypeWeightage {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

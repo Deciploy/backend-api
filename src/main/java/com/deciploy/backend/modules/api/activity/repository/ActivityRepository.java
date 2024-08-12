@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ActivityRepository extends JpaRepository<Activity, String>, QuerydslPredicateExecutor<Activity> {
+public interface ActivityRepository extends JpaRepository<Activity, String>, QuerydslPredicateExecutor<Activity>, CustomActivityRepository {
     @Query("SELECT a FROM Activity a WHERE a.user.id = :userId")
     List<Activity> findActivityByUserId(@Param("userId") String userId);
 }

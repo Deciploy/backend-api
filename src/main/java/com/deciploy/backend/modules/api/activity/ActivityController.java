@@ -1,6 +1,7 @@
 package com.deciploy.backend.modules.api.activity;
 
 import com.deciploy.backend.modules.api.activity.dto.ActivitySyncRequest;
+import com.deciploy.backend.modules.api.activity.dto.ScoreFilter;
 import com.deciploy.backend.modules.api.common.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,5 +32,20 @@ public class ActivityController {
     @GetMapping("/{userId}")
     public ResponseEntity findByUser(@PathVariable String userId) {
         return ApiResponse.data(activityService.findByUser(userId));
+    }
+
+    @GetMapping("score/employee")
+    public ResponseEntity getEmployeeScore(ScoreFilter filter) {
+        return ApiResponse.data(activityService.getEmployeeScore(filter));
+    }
+
+    @GetMapping("score/team")
+    public ResponseEntity getTeamScore(ScoreFilter filter) {
+        return ApiResponse.data(activityService.getTeamScore(filter));
+    }
+
+    @GetMapping("score/company")
+    public ResponseEntity getCompanyScore(ScoreFilter filter) {
+        return ApiResponse.data(activityService.getDateCompanyScore(filter));
     }
 }
