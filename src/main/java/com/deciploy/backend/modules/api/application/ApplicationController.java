@@ -1,5 +1,6 @@
 package com.deciploy.backend.modules.api.application;
 
+import com.deciploy.backend.modules.api.application.dto.UsageFilter;
 import com.deciploy.backend.modules.api.common.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,5 +36,10 @@ public class ApplicationController {
     @GetMapping("types")
     public ResponseEntity getApplicationTypes() {
         return ApiResponse.data(applicationService.getApplicationTypes());
+    }
+
+    @GetMapping("usage")
+    public ResponseEntity getApplicationUsages(UsageFilter filter) {
+        return ApiResponse.data(applicationService.applicationUsages(filter));
     }
 }

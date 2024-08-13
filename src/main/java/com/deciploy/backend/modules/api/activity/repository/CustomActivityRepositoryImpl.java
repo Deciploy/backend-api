@@ -115,7 +115,8 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
 
     private <T> JPAQuery<T> getScoreQuery(Class<T> type) {
         NumberExpression<Integer> score = qActivity.endTime.hour().subtract(qActivity.startTime.hour())
-                .multiply(qApplicationTypeWeightage.weightage.coalesce(0)).sum().as("score");
+                .multiply(qApplicationTypeWeightage.weightage.coalesce(0))
+                .sum();
 
         BooleanExpression weightageJoinCondition = qApplicationTypeWeightage.applicationType.id.eq(qApplication.type.id)
                 .and(qApplicationTypeWeightage.team.id.eq(qActivity.user.team.id));
@@ -123,21 +124,28 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository {
         QBean<T> select = null;
 
         if (type == EmployeeScore.class) {
-            select = Projections.bean(type, qActivity.user, score);
+            select = Projections.bean(type, qActivity.user, score.as("score"));
         } else if (type == TeamScore.class) {
-            select = Projections.bean(type, qActivity.user.team, score);
+            select = Projections.bean(type, qActivity.user.team, score.as("score"));
         } else if (type == DateCompanyScore.class) {
             DateExpression<Date> date = Expressions.dateTemplate(Date.class, "date({0})", qActivity.startTime);
-            select = Projections.bean(type, date.as("date"), score);
+            select = Projections.bean(type, date.as("date"), score.as("score"));
         } else {
             throw new IllegalArgumentException("Invalid type");
         }
 
-        return queryFactory
+        JPAQuery<T> query = queryFactory
                 .select(select)
                 .from(qActivity)
                 .leftJoin(qApplicationTypeWeightage)
                 .on(weightageJoinCondition);
+
+        if (type == DateCompanyScore.class) {
+            return query;
+        }
+        
+        return query
+                .orderBy(score.desc());
     }
 
     private JPAQuery<EmployeeScore> getEmployeeScoreQuery() {
