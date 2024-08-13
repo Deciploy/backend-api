@@ -31,7 +31,7 @@ public class ActivityService {
     private ApplicationService applicationService;
 
     public ActivityService() {
-        dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
     }
 
     public void sync(List<ActivitySyncRequest> activitySyncRequests) {
